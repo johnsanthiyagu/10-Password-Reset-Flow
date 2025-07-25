@@ -4,7 +4,6 @@ import connectDB from "./config.js";
 import router from "./router/user.router.js";
 import cors from "cors";
 
-
 dotenv.config();
 const app = express();
 connectDB(); // Connect to MongoDB

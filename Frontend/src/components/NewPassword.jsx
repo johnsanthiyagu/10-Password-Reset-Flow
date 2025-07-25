@@ -7,7 +7,7 @@ const NewPassword = () => {
   const { token } = useParams();
   const navigate = useNavigate();
 
-  const [newPassword, setNewPassword] = useState("");
+  const [newPassword, setNewPassword] = useState(""); 
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
