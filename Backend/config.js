@@ -16,7 +16,7 @@ const connectDB = async () => {
     return;
   }
 
-  if (!connectionPromise) {
+  if (!connectionPromise || mongoose.connection.readyState === 0) {
     connectionPromise = mongoose.connect(connectionString).catch((error) => {
       connectionPromise = undefined;
       throw error;

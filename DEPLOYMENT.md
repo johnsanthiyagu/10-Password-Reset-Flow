@@ -2,11 +2,12 @@
 
 This repository contains two separate apps, so deploy it as two Vercel projects:
 
-1. **Backend project:** set the Vercel Root Directory to `Backend` and the Framework Preset to **Other** so Vercel deploys the `api` function rather than running the local Express start script.
+1. **Backend project:** set the Vercel Root Directory to `Backend` and use the **Express** Framework Preset (or let Vercel detect it).
 2. **Frontend project:** set the Vercel Root Directory to `Frontend`.
 
-Connect both projects to the same Git repository. Deploy the backend first, then
-use its deployment URL when configuring the frontend. Vercel should detect the
+Connect both projects to the same Git repository. Vercel serves the Express
+application from `Backend/app.js` as a function. Deploy the backend first, then
+use its deployment URL when configuring the frontend. Vercel detects the
 frontend Vite app from its package file and `vercel.json`.
 
 ## Backend environment variables
@@ -42,7 +43,8 @@ development. For local development, set `VITE_API_URL` in `Frontend/.env` to tha
 same local URL.
 
 The backend allows the local Vite origin and the origin(s) in `FRONTEND_URL`.
-Multiple frontend origins can be supplied as a comma-separated list.
+For multiple origins, supply a comma-separated list with the production frontend
+origin first; reset emails use the first origin in that list.
 
 ## After deployment
 

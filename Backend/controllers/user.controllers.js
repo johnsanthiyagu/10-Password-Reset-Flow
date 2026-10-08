@@ -154,6 +154,16 @@ const userController = {
       const user = await User.findOne({ email });
       if (!user) return res.status(404).json({ message: "User not found" });
 
+      const frontendUrl = process.env.FRONTEND_URL
+        ?.split(",")[0]
+        .trim()
+        .replace(/\/+$/, "");
+      if (process.env.NODE_ENV === "production" && !frontendUrl) {
+        return res.status(500).json({
+          message: "Password reset email is not configured on the server.",
+        });
+      }
+
       const token = crypto.randomBytes(32).toString("hex");
       const expiry = Date.now() + 3600000;
 
@@ -161,10 +171,7 @@ const userController = {
       user.resetPasswordExpires = expiry;
       await user.save();
 
-      const frontendUrl = (
-        process.env.FRONTEND_URL || "http://localhost:5173"
-      ).replace(/\/+$/, "");
-      const resetUrl = `${frontendUrl}/reset-password/${token}`;
+      const resetUrl = `${frontendUrl || "http://localhost:5173"}/reset-password/${token}`;
       const expiresAt = new Date(expiry).toUTCString();
 
       const transporter = nodemailer.createTransport({

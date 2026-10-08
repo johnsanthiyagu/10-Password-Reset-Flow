@@ -3,6 +3,7 @@ import cors from "cors";
 import router from "./router/user.router.js";
 import dotenv from "dotenv";
 import { fileURLToPath } from "node:url";
+import connectDB from "./config.js";
 
 dotenv.config({ path: fileURLToPath(new URL("./.env", import.meta.url)) });
 
@@ -24,6 +25,19 @@ app.use(
   })
 );
 app.use(express.json());
+app.use(async (req, res, next) => {
+  if (req.method === "OPTIONS" || (req.method === "GET" && req.path === "/api/health")) {
+    return next();
+  }
+
+  try {
+    await connectDB();
+    return next();
+  } catch (error) {
+    console.error("Database connection failed:", error.message);
+    return res.status(503).json({ message: "The service is temporarily unavailable." });
+  }
+});
 app.get("/api/health", (_req, res) => {
   res.status(200).json({ status: "ok" });
 });
