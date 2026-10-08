@@ -1,36 +1,49 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
+import { MdLockReset, MdLogin } from "react-icons/md";
+import { useLoader } from "../utility/LoaderContext";
 
 const ResetPassword = () => {
   const [email, setEmail] = useState("");
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+  const { loader } = useLoader();
 
   const handleResetPassword = async (e) => {
     e.preventDefault();
+    loader(true);
     try {
       const response = await axios.post(
         "http://localhost:4000/api/users/send-reset-link",
         { email }
       );
-      alert("Reset password link sent to your email!");
-      console.log("Reset password link sent:", response.data);
-      setSuccess("Reset password link sent to your email!");
+      setSuccess(response.data.message || "Reset password link sent to your email.");
       setError(null);
     } catch (err) {
-      console.error("Failed to send reset password link:", err);
-      setError("Failed to send reset password link. Please try again.");
+      console.error("Failed to send reset password link:", err.message);
+      setError(
+        err.response?.data?.message ||
+          (err.response
+            ? "Failed to send reset password link. Please try again."
+            : "Cannot reach the backend. Start the backend server and try again.")
+      );
       setSuccess(null);
+    } finally {
+      loader(false);
     }
   };
 
   return (
-    <div className="flex justify-center h-screen items-center bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-md w-96">
-        <h2 className="text-2xl font-bold mb-6 text-center">Reset Password</h2>
-        <form onSubmit={handleResetPassword}>
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-2" htmlFor="email">
+    <main className="flex min-h-screen items-center justify-center bg-gray-100 px-4 pb-8 pt-20">
+      <section className="w-full max-w-md rounded-xl bg-white p-6 shadow-lg sm:p-8">
+        <h1 className="mb-2 text-center text-2xl font-bold text-gray-900 sm:text-3xl">Reset your password</h1>
+        <p className="mb-6 text-center text-sm text-gray-600">
+          Enter your account email and we&apos;ll send you a secure reset link.
+        </p>
+        <form onSubmit={handleResetPassword} className="space-y-4">
+          <div>
+            <label className="mb-1.5 block text-sm font-medium text-gray-700" htmlFor="email">
               Email
             </label>
             <input
@@ -38,24 +51,30 @@ const ResetPassword = () => {
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded"
-              placeholder="Enter your email"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2.5 outline-none transition focus:border-green-700 focus:ring-2 focus:ring-green-700/20"
+              placeholder="you@example.com"
+              autoComplete="email"
               required
             />
           </div>
-          <div className="mb-6">
-            <button
-              type="submit"
-              className="w-full bg-green-600 text-white p-2 rounded hover:bg-green-700 transition-colors"
-            >
-              Send Reset Link
-            </button>
-          </div>
-          {success && <p className="text-green-600">{success}</p>}
-          {error && <p className="text-red-600">{error}</p>}
+          {success && <p role="status" className="rounded-lg bg-green-50 p-3 text-sm text-green-800">{success}</p>}
+          {error && <p role="alert" className="rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</p>}
+          <button
+            type="submit"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-green-700 px-4 py-2.5 font-semibold text-white transition hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-700 focus:ring-offset-2"
+          >
+            <MdLockReset aria-hidden="true" size={20} />
+            Send reset link
+          </button>
         </form>
-      </div>
-    </div>
+        <p className="mt-5 text-center text-sm">
+          <Link to="/login" className="inline-flex items-center gap-1 font-semibold text-green-800 hover:underline">
+            <MdLogin aria-hidden="true" size={18} />
+            Back to log in
+          </Link>
+        </p>
+      </section>
+    </main>
   );
 };
 

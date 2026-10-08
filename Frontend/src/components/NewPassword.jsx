@@ -2,10 +2,13 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
+import { useLoader } from "../utility/LoaderContext";
+import { MdLockReset } from "react-icons/md";
 
 const NewPassword = () => {
   const { token } = useParams();
   const navigate = useNavigate();
+  const { loader } = useLoader();
 
   const [newPassword, setNewPassword] = useState(""); 
   const [error, setError] = useState(null);
@@ -14,8 +17,9 @@ const NewPassword = () => {
   const handleNewPassword = async (e) => {
     e.preventDefault();
 
+    loader(true);
     try {
-      const response = await axios.post(
+      await axios.post(
         `http://localhost:4000/api/users/reset-password/${token}`,
         { newPassword }
       );
@@ -29,21 +33,23 @@ const NewPassword = () => {
       console.error("Password reset failed:", err);
       setError("Password reset failed. Please try again.");
       setSuccess(null);
+    } finally {
+      loader(false);
     }
   };
 
   return (
-    <div className="flex justify-center h-screen items-center bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-md w-96">
-        <h2 className="text-2xl font-bold mb-6 text-center">
-          Set New Password
-        </h2>
-        <form onSubmit={handleNewPassword}>
-          <div className="mb-6">
-            <label
-              className="block text-sm font-medium mb-2"
-              htmlFor="newPassword"
-            >
+    <main className="flex min-h-screen items-center justify-center bg-gray-100 px-4 pb-8 pt-20">
+      <section className="w-full max-w-md rounded-xl bg-white p-6 shadow-lg sm:p-8">
+        <h1 className="mb-2 text-center text-2xl font-bold text-gray-900 sm:text-3xl">
+          Choose a new password
+        </h1>
+        <p className="mb-6 text-center text-sm text-gray-600">
+          Your new password must be at least 6 characters.
+        </p>
+        <form onSubmit={handleNewPassword} className="space-y-4">
+          <div>
+            <label className="mb-1.5 block text-sm font-medium text-gray-700" htmlFor="newPassword">
               New Password
             </label>
             <input
@@ -51,23 +57,25 @@ const NewPassword = () => {
               id="newPassword"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded"
-              placeholder="Enter new password"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2.5 outline-none transition focus:border-green-700 focus:ring-2 focus:ring-green-700/20"
+              placeholder="At least 6 characters"
+              autoComplete="new-password"
               required
               minLength={6}
             />
           </div>
+          {success && <p role="status" className="rounded-lg bg-green-50 p-3 text-sm text-green-800">{success}</p>}
+          {error && <p role="alert" className="rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</p>}
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition duration-200"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-green-700 px-4 py-2.5 font-semibold text-white transition hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-700 focus:ring-offset-2"
           >
-            Reset Password
+            <MdLockReset aria-hidden="true" size={20} />
+            Update password
           </button>
         </form>
-        {success && <p className="text-green-600 mt-4">{success}</p>}
-        {error && <p className="text-red-600 mt-4">{error}</p>}
-      </div>
-    </div>
+      </section>
+    </main>
   );
 };
 
