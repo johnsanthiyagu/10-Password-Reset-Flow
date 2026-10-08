@@ -1,6 +1,8 @@
 # Deploying to Vercel
 
-This repository contains two separate apps, so deploy it as two Vercel projects:
+This repository contains two separate apps, so deploy it as two Vercel projects.
+Do not commit either local `.env` file. The `.env.example` files are templates;
+configure production values in Vercel's Environment Variables settings.
 
 1. **Backend project:** set the Vercel Root Directory to `Backend` and use the **Express** Framework Preset (or let Vercel detect it).
 2. **Frontend project:** set the Vercel Root Directory to `Frontend`.
@@ -9,6 +11,9 @@ Connect both projects to the same Git repository. Vercel serves the Express
 application from `Backend/app.js` as a function. Deploy the backend first, then
 use its deployment URL when configuring the frontend. Vercel detects the
 frontend Vite app from its package file and `vercel.json`.
+
+Push the deployment changes to GitHub before importing or redeploying the
+projects so Vercel builds the latest commit.
 
 ## Backend environment variables
 
