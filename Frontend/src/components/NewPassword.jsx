@@ -4,6 +4,7 @@ import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import { useLoader } from "../utility/LoaderContext";
 import { MdLockReset } from "react-icons/md";
+import { USERS_API_URL } from "../utility/api";
 
 const NewPassword = () => {
   const { token } = useParams();
@@ -20,7 +21,7 @@ const NewPassword = () => {
     loader(true);
     try {
       await axios.post(
-        `http://localhost:4000/api/users/reset-password/${token}`,
+        `${USERS_API_URL}/reset-password/${token}`,
         { newPassword }
       );
       setSuccess("Password reset successful! Redirecting to login...");

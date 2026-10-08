@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useLoader } from "../utility/LoaderContext";
 import { useAuth } from "../utility/AuthContext";
 import { MdLogin, MdLockReset, MdPersonAdd } from "react-icons/md";
+import { USERS_API_URL } from "../utility/api";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ const Login = () => {
     loader(true);
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/users/login",
+        `${USERS_API_URL}/login`,
         {
           email,
           password,

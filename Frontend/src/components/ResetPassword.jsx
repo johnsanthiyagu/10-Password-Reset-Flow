@@ -3,6 +3,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { MdLockReset, MdLogin } from "react-icons/md";
 import { useLoader } from "../utility/LoaderContext";
+import { USERS_API_URL } from "../utility/api";
 
 const ResetPassword = () => {
   const [email, setEmail] = useState("");
@@ -15,7 +16,7 @@ const ResetPassword = () => {
     loader(true);
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/users/send-reset-link",
+        `${USERS_API_URL}/send-reset-link`,
         { email }
       );
       setSuccess(response.data.message || "Reset password link sent to your email.");

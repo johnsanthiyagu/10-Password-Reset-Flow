@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { MdPersonAdd, MdLogin } from "react-icons/md";
 import { useLoader } from "../utility/LoaderContext";
+import { USERS_API_URL } from "../utility/api";
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -17,7 +18,7 @@ const Register = () => {
     loader(true);
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/users/register",
+        `${USERS_API_URL}/register`,
         {
           name,
           email,
