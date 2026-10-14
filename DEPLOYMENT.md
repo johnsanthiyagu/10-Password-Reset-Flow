@@ -1,3 +1,15 @@
+Admin credential (for your evaluation)
+Email: johnsanthiyagu94@gmail.com
+Pws: John@123
+
+Theatre owner(manage showtime, price...)
+Email: demo.owner02@example.com
+Pwd: Owner@123
+
+User: create your own account and book a ticket.
+
+
+
 # Deploying to Vercel
 
 This repository contains two separate apps, so deploy it as two Vercel projects.
